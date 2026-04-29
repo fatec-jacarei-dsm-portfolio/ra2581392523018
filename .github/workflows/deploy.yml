@@ -2,7 +2,7 @@ name: Deploy React to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # ou o nome da sua branch principal
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -14,18 +14,26 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./docs
+        working-directory: ./docs # Define que os comandos rodem dentro de /docs
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24 # Atualizado para evitar avisos de depreciação
           cache: 'npm'
+          # Informa ao setup-node exatamente onde está o arquivo de dependências
+          cache-dependency-path: './docs/package-lock.json' 
+          
       - run: npm install
       - run: npm run build
-      - uses: actions/upload-pages-artifact@v3
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs/dist # Certifique-se que o React gera a build na pasta /dist
+          # Garante que o artefato seja pego da pasta dist dentro de docs
+          path: ./docs/dist 
 
   deploy:
     needs: build
