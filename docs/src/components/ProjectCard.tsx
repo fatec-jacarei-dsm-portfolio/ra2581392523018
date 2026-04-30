@@ -2,7 +2,7 @@ import type { Repository } from '@/types/github';
 import { ImageCarousel } from '@/components/ImageCarousel';
 // import { Github, ExternalLink } from 'lucide-react';
 
-const USUARIO = import.meta.env.VITE_GITHUB_USER as string;
+// const USUARIO = import.meta.env.VITE_GITHUB_USER as string;
 
 
 interface ProjetCardProps {
@@ -10,7 +10,7 @@ interface ProjetCardProps {
 }
 
 export const ProjectCard = ({ project }: ProjetCardProps) => {
-    const previewUrl = `https://raw.githubusercontent.com/${USUARIO}/${project.name}/main/preview.png`;
+    // const previewUrl = `https://raw.githubusercontent.com/${USUARIO}/${project.name}/main/preview.png`;
     return (
         <div className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
             <ImageCarousel

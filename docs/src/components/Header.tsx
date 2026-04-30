@@ -1,5 +1,3 @@
-import {Logo} from '@/components/Logo';
-
 export const Header = () => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);

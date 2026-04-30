@@ -3,14 +3,15 @@ import { ProjectCard } from '@/components/ProjectCard';
 import { Header } from '@/components/Header';
 import { motion } from 'framer-motion'; 
 import { SQLHeader } from '@/components/SQLHeader';
-import fotoPerfil from '@/assets/foto_perfil.jpeg'
+import fotoPerfil from '@/assets/foto_perfil.jpeg';
+import type { Variants } from 'framer-motion';
 
 
 function App() {
   const { entregas, atividades, projpessoais, loading, error } = useProjects();
 
   // Variantes de animação do Framer Motion
-  const cardVariants = {
+  const cardVariants : Variants = {
     hiddenRight: { opacity: 0, x: 100 }, 
     hiddenLeft: { opacity: 0, x: -100 },  
     visible: { 
