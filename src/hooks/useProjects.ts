@@ -22,6 +22,10 @@ export const useProjects = () => {
           const projpessoaisArr: Repository[] = [];
 
           for (const repo of data) {
+            // Exclui o repositório de perfil do usuário (ex: WilliamM4x/WilliamM4x)
+            if (repo.name.toLowerCase() === "williamm4x") {
+              continue;
+            }
 
             const topics = repo.topics?.map((t) => t.toLowerCase()) || [];
             if (topics.includes("entrega")) {
@@ -29,6 +33,8 @@ export const useProjects = () => {
             } else if (topics.includes("atividades")) {
               atividadesArr.push(repo);
             } else if (topics.includes("projetos-pessoais")) {
+            } else {
+              // Se não for 'entrega' ou 'atividade', considera-se um projeto pessoal por padrão.
               projpessoaisArr.push(repo);
             }
           }
