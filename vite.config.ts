@@ -15,4 +15,8 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    outDir: 'docs', // Faz o build ser exportado para a pasta /docs
+    emptyOutDir: true // Limpa a pasta docs antes de gerar novos arquivos
+  }
 })
