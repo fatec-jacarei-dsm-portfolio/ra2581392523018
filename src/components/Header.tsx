@@ -33,6 +33,13 @@ export const Header = () => {
           >
             Projetos
           </button>
+          <button 
+            onClick={() => scrollToSection('tecnologias')} 
+            className="text-sm font-medium text-slate-600 hover:text-blue-600 transition"
+          >
+             Tecnologias
+          </button>
+
           
           {/* Contato botão */}
           <a 

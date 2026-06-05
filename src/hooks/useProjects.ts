@@ -1,59 +1,58 @@
-import {useEffect, useState} from 'react';
-import axios from 'axios';
-import {getRepositories} from '@/services/api';
-import type {Repository}  from "@/types/github";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { getRepositoriesWithLanguages } from "@/lib/github";
+import type { Repository } from "@/types/github";
 
-export const useProjects = ()=> {
-    const [projects, setProjects] = useState<Repository[]>([]);
-    const [entregas, setEntregas] = useState<Repository[]>([]);
-    const [atividades, setAtividades] = useState<Repository[]>([]);
-    const [projpessoais, setProjpessoais] = useState<Repository[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+export const useProjects = () => {
+  const [entregas, setEntregas] = useState<Repository[]>([]);
+  const [atividades, setAtividades] = useState<Repository[]>([]);
+  const [projpessoais, setProjpessoais] = useState<Repository[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    useEffect(() => {
-        const getProjetcts = async () =>{
-            try{
-                setLoading(true);
-                const data = await getRepositories();
-                if(Array.isArray(data)){
-                    setProjects(data);
+  useEffect(() => {
+    const getProjects = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const data = await getRepositoriesWithLanguages();
+        if (Array.isArray(data)) {
+          const entregasArr: Repository[] = [];
+          const atividadesArr: Repository[] = [];
+          const projpessoaisArr: Repository[] = [];
 
-                    const projectsWithEntrega = data.filter(
-                      (repo) => repo.topics?.includes("entrega"), 
-                    );
-                    const projectsWithAtividade = data.filter(
-                      (repo) =>
-                        repo.topics?.includes("atividades"), 
-                    );
-                    const projectsWithPessoal = data.filter(
-                      (repo) =>
-                        repo.topics?.includes("projetos-pessoais"), 
-                    );
+          for (const repo of data) {
 
-                    setEntregas(projectsWithEntrega);
-                    setAtividades(projectsWithAtividade);
-                    setProjpessoais(projectsWithPessoal);
-
-                }else {
-                    console.error("A API não retornou um array:", data);
-                    setError("Formato de dados inválido recebido do GitHub.");
-                }
-                
-            }catch (error){
-                console.log(error);
-                if (axios.isAxiosError(error)) {
-                setError(error.response?.data?.message || 'Erro na API do GitHub');
-                } else {
-                setError('Ocorreu um erro inesperado');
-                }
-            } finally {
-                setLoading(false);
+            const topics = repo.topics?.map((t) => t.toLowerCase()) || [];
+            if (topics.includes("entrega")) {
+              entregasArr.push(repo);
+            } else if (topics.includes("atividades")) {
+              atividadesArr.push(repo);
+            } else if (topics.includes("projetos-pessoais")) {
+              projpessoaisArr.push(repo);
             }
-        
-        };
-        getProjetcts();
-    }, []);
+          }
 
-    return { projects, entregas, atividades, projpessoais, loading, error };
+          setEntregas(entregasArr);
+          setAtividades(atividadesArr);
+          setProjpessoais(projpessoaisArr);
+        } else {
+          console.error("A API não retornou um array:", data);
+          setError("Formato de dados inválido recebido do GitHub.");
+        }
+      } catch (error) {
+        console.log(error);
+        if (axios.isAxiosError(error)) {
+          setError(error.response?.data?.message || "Erro na API do GitHub");
+        } else {
+          setError("Ocorreu um erro inesperado");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    getProjects();
+  }, []);
+
+  return { entregas, atividades, projpessoais, loading, error };
 };

@@ -1,6 +1,8 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { GracefulImage } from '@/components/GracefulImage';
+
 
 interface Props {
   projectName: string;
@@ -11,54 +13,49 @@ export const ImageCarousel = ({ projectName, userName }: Props) => {
   const [validImages, setValidImages] = useState<string[]>([]);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  
-  const possibilities = [
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagens/1.png`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagens/1.jpeg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagens/1.jpg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagens/2.png`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagens/2.jpeg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagens/2.jpg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagem/1.png`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagem/1.jpeg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagem/1.jpg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagem/2.png`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagem/2.jpeg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/main/imagem/2.jpg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagens/1.png`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagens/1.jpeg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagens/1.jpg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagens/2.png`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagens/2.jpeg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagens/2.jpg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagem/1.png`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagem/1.jpeg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagem/1.jpg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagem/2.png`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagem/2.jpeg`,
-    `https://raw.githubusercontent.com/${userName}/${projectName}/master/imagem/2.jpg`,
-  ];
 
   useEffect(() => {
     const validateImages = async () => {
       setLoading(true);
-      const confirmedImages: string[] = [];
+      const foundImages: string[] = [];
+      const branches = ['main', 'master'];
+      const folders = ['imagens', 'imagem'];
+      const extensions = ['png', 'jpeg', 'jpg'];
+      let imageIndex = 1;
+      let keepSearching = true;
 
-      // Testamos cada possibilidade usando fetch 
-      const checks = possibilities.map(async (url) => {
-        try {
-          // Fazemos uma requisição HEAD para verificar se o arquivo existe (status 200)
-          const response = await fetch(url, { method: 'HEAD' });
-          if (response.ok) {
-            confirmedImages.push(url);
+      while (keepSearching) {
+        let foundForIndex = false;
+        // Gera todas as URLs possíveis para o índice atual (1, 2, 3...)
+        const possibilitiesForIndex: string[] = [];
+        for (const branch of branches) {
+          for (const folder of folders) {
+            for (const ext of extensions) {
+              possibilitiesForIndex.push(`https://raw.githubusercontent.com/${userName}/${projectName}/${branch}/${folder}/${imageIndex}.${ext}`);
+            }
           }
-        } catch (error) {
         }
-      });
 
-      await Promise.all(checks);
-      confirmedImages.sort();
-      setValidImages(confirmedImages);
+        // Tenta encontrar a primeira URL válida para o índice atual
+        for (const url of possibilitiesForIndex) {
+          try {
+            const response = await fetch(url, { method: 'HEAD' });
+            if (response.ok) {
+              foundImages.push(url);
+              foundForIndex = true;
+              break; // Para de procurar outras variações para este índice
+            }
+          } catch (error) { /* Ignora erros de rede */ }
+        }
+
+        if (foundForIndex) {
+          imageIndex++; // Se encontrou, incrementa para procurar o próximo número
+        } else {
+          keepSearching = false; // Se não encontrou, para o loop principal
+        }
+      }
+
+      setValidImages(foundImages);
       setLoading(false);
     };
 
@@ -84,10 +81,12 @@ export const ImageCarousel = ({ projectName, userName }: Props) => {
     );
   }
 
+  const MotionGracefulImage = motion(GracefulImage);
+
   return (
     <div className="relative aspect-video w-full overflow-hidden bg-slate-100 group">
-      <AnimatePresence mode="wait">
-        <motion.img
+      <AnimatePresence initial={false} mode="wait">
+        <MotionGracefulImage
           key={validImages[index]}
           src={validImages[index]}
           initial={{ opacity: 0, x: 20 }}
@@ -95,11 +94,6 @@ export const ImageCarousel = ({ projectName, userName }: Props) => {
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.3 }}
           className="h-full w-full object-cover"
-          onError={(e) => {
-            const target = e.currentTarget;
-            if (index > 0) setIndex(0); 
-            else target.src = 'https://placehold.co/600x400?text=Projeto+em+Desenvolvimento';
-          }}
         />
       </AnimatePresence>
 
