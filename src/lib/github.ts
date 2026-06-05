@@ -4,7 +4,7 @@ const USER = "Williamm4x";
 const API_URL = `https://api.github.com/users/${USER}/repos?sort=updated&direction=desc`;
 
 // Adiciona o token de autenticação para aumentar o limite de requisições da API
-const GITHUB_TOKEN = import.meta.env.GITHUB_TOKEN;
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
 
 const headers: HeadersInit = {
   Accept: "application/vnd.github.v3+json",
@@ -17,7 +17,7 @@ if (GITHUB_TOKEN) {
 // Para depuração: verificar se o token está sendo carregado
 if (!GITHUB_TOKEN) {
   console.warn(
-    "Atenção: Token do GitHub não encontrado. As requisições podem ser limitadas.",
+    "Atenção: Token do GitHub (VITE_GITHUB_TOKEN) não encontrado. As requisições podem ser limitadas.",
   );
 }
 
