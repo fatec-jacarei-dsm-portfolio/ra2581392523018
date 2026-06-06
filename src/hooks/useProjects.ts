@@ -33,8 +33,6 @@ export const useProjects = () => {
             } else if (topics.includes("atividades")) {
               atividadesArr.push(repo);
             } else if (topics.includes("projetos-pessoais")) {
-            } else {
-              // Se não for 'entrega' ou 'atividade', considera-se um projeto pessoal por padrão.
               projpessoaisArr.push(repo);
             }
           }
