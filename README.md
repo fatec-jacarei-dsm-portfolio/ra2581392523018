@@ -1,7 +1,7 @@
 # Portfólio de Projetos - Fatec Jacareí
 
-**Aluno:** WILLIAM MAX DOS SANTOS SILVA SILVA
-**Curso:** Desenvolvimento de Software Multiplataforma  
+**Aluno:** WILLIAM MAX DOS SANTOS SILVA SILVA <br>
+**Curso:** Desenvolvimento de Software Multiplataforma <br>  
 **Turma:** 2025.2
 
 ---
