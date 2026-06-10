@@ -44,17 +44,23 @@ export const useProjects = () => {
           console.error("A API não retornou um array:", data);
           setError("Formato de dados inválido recebido do GitHub.");
         }
-      } catch (error) {
+      } 
+      catch (error) {
         console.log(error);
         if (axios.isAxiosError(error)) {
           setError(error.response?.data?.message || "Erro na API do GitHub");
+        console.error("Falha ao buscar os projetos:", error);
+        if (error instanceof Error) {
+          setError(error.message);
         } else {
           setError("Ocorreu um erro inesperado");
+          setError("Ocorreu um erro inesperado ao buscar os projetos.");
         }
-      } finally {
+      } 
+    }finally {
         setLoading(false);
-      }
-    };
+      };
+    }
     getProjects();
   }, []);
 
