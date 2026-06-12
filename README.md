@@ -14,6 +14,6 @@
 
 **Vídeos de Apresentação**
 
-🎤 2DSM - [Vídeo](https://youtu.be/GcjGZbHfaiU)  
+🎤 2DSM - [Vídeo](https://youtu.be/DAYp3iwSR4Y)  
 🎤 4DSM - [Vídeo](LINK_VIDEO_4DSM)  
 🎤 6DSM - [Vídeo](LINK_VIDEO_6DSM)
